@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Morgann Music Play",
+    "version": "1.0.0",
+    "description": "Écoute la radio Morgann Music CP en direct.",
+    "icons": {
+        "128": "icon.png"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Morgann Music Play",
+        "default_icon": "icon.png"
+    },
+    "permissions": [
+        "storage"
+    ],
+    "host_permissions": [
+        "https://api.radio.play.morgannmusic.uk/*",
+        "https://api.worker.mm-cp.uk/*"
+    ]
+}
