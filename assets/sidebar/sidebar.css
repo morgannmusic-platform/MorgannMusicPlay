@@ -1,0 +1,111 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background-color: #FFF9F2;
+    border-right: 1px solid rgba(255, 79, 160, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 16px;
+    z-index: 100;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-logo {
+    width: 46px;
+    height: 46px;
+}
+
+.sidebar-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #222222;
+}
+
+.sidebar-nav {
+    flex: 1;
+    margin-top: 24px;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-nav a {
+    display: block;
+    padding: 12px 16px;
+    color: #555555;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background-color: #FFF4DF;
+    color: #FF4FA0;
+}
+
+.sidebar-footer {
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Style des boutons d'authentification */
+.auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.btn-login {
+    background-color: transparent;
+    border: 1px solid #FF4FA0;
+    color: #FF4FA0;
+}
+
+.btn-signup {
+    background-color: #FF4FA0;
+    border: none;
+    color: #FFF9F2;
+}
+
+.btn-auth:hover {
+    opacity: 0.85;
+}
+
+/* Style si l'utilisateur est connecté */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    font-weight: 600;
+    color: #222222;
+}
