@@ -1,6 +1,19 @@
-<aside class="sidebar">
+<!-- Bouton Burger pour Mobile -->
+<button class="mobile-toggle-btn" id="mobile-toggle-btn" aria-label="Menu">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+</button>
+
+<!-- Arrière-plan sombre sur mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <img src="/assets/img/icon/logo.svg" alt="Logo Morgann Music" class="sidebar-logo">
+        <button class="mobile-close-btn" id="mobile-close-btn" aria-label="Fermer">✕</button>
     </div>
 
     <nav class="sidebar-nav">
@@ -8,11 +21,10 @@
             <li><a href="/search.html">Recherche</a></li>
             <li><a href="/new.html" class="active">Nouveauté</a></li>
             <li><a href="/radio.html">Radio</a></li>
-            <li><a href="/library.html">Bibliothèque</a></li>
         </ul>
     </nav>
 
     <div class="sidebar-footer" id="auth-section">
-        <!-- Dynamique : injecté par sidebar.js (Boutons ou Nom/Prénom) -->
+        <!-- Dynamique : injecté par sidebar.js -->
     </div>
 </aside>

@@ -55,6 +55,13 @@
             -webkit-backdrop-filter: blur(30px);
             min-height: 100vh;
             padding-bottom: 150px;
+            transition: margin-left 0.3s ease;
+            position: relative;
+        }
+
+        /* Bannière mobile pochette masquée sur ordinateur */
+        .mobile-cover-banner {
+            display: none;
         }
 
         /* En-tête de la sortie */
@@ -63,6 +70,8 @@
             align-items: flex-end;
             gap: 40px;
             margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
         }
 
         .cover-wrapper {
@@ -112,6 +121,10 @@
             transform: translateY(-2px);
         }
 
+        .btn-share-mobile {
+            display: none;
+        }
+
         .release-info {
             display: flex;
             flex-direction: column;
@@ -142,6 +155,15 @@
             font-weight: 600;
             opacity: 0.85;
             margin-bottom: 12px;
+            cursor: pointer;
+            display: inline-block;
+            transition: opacity 0.2s;
+        }
+
+        .artist-name:hover {
+            opacity: 1;
+            color: var(--accent-dynamic);
+            text-decoration: underline;
         }
 
         .meta-badges {
@@ -150,19 +172,20 @@
             align-items: center;
         }
 
+        /* Badge Dolby Atmos fortement agrandi sur ordinateur */
         .dolby-icon {
-            height: 24px;
+            height: 52px;
             width: auto;
             object-fit: contain;
         }
 
         .release-year {
-            font-size: 1rem;
-            opacity: 0.7;
-            font-weight: 500;
+            font-size: 1.1rem;
+            opacity: 0.85;
+            font-weight: 600;
         }
 
-        /* Section Tracklist nette et lisible */
+        /* Section Tracklist */
         .tracklist-section {
             background: var(--card-bg);
             backdrop-filter: blur(25px);
@@ -172,6 +195,8 @@
             border: 1px solid rgba(255, 255, 255, 0.7);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
             margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
         }
 
         h2 {
@@ -201,6 +226,8 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            min-width: 0;
+            flex: 1;
         }
 
         .track-number {
@@ -209,17 +236,22 @@
             opacity: 0.5;
             width: 24px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .track-title {
             font-size: 1.05rem;
             font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .track-right {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-shrink: 0;
         }
 
         .track-duration {
@@ -246,7 +278,7 @@
             background: rgba(0, 0, 0, 0.08);
         }
 
-        /* Menu contextuel propre */
+        /* Menu contextuel */
         .context-menu {
             position: absolute;
             right: 30px;
@@ -280,7 +312,7 @@
             color: var(--accent-dynamic);
         }
 
-        /* Infos de bas de page */
+        /* Infos bas de page */
         .release-footer-info {
             background: var(--card-bg);
             backdrop-filter: blur(25px);
@@ -294,13 +326,15 @@
             gap: 8px;
             border: 1px solid rgba(255, 255, 255, 0.7);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 1;
         }
 
         .release-footer-info p {
             line-height: 1.5;
         }
 
-        /* Modale de partage & intégration */
+        /* Modale de partage */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -372,6 +406,107 @@
             font-size: 1.1rem;
             opacity: 0.7;
         }
+
+        /* Adaptations pour mobile */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 0 0 160px 0;
+            }
+
+            /* Bannière mobile : fondu baissé (image lisible plus bas avant de s'estomper) */
+            .mobile-cover-banner {
+                display: block;
+                width: 100%;
+                height: 420px;
+                position: relative;
+                overflow: hidden;
+                margin: 0;
+            }
+
+            .mobile-cover-media {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: brightness(0.96);
+                -webkit-mask-image: radial-gradient(ellipse 150% 90% at 50% 0%, #000 45%, transparent 100%);
+                mask-image: radial-gradient(ellipse 150% 90% at 50% 0%, #000 45%, transparent 100%);
+            }
+
+            .release-hero {
+                padding: 0 16px;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 10px;
+                margin-top: -110px;
+                margin-bottom: 25px;
+            }
+
+            .cover-container,
+            .btn-share-desktop {
+                display: none !important;
+            }
+
+            .btn-share-mobile {
+                display: inline-flex !important;
+                width: auto;
+                padding: 6px 14px;
+                font-size: 0.8rem;
+                border-radius: 10px;
+                margin: 6px 0 10px 0;
+                gap: 6px;
+            }
+
+            .release-info {
+                align-items: center;
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 2.1rem;
+                margin-bottom: 4px;
+            }
+
+            .artist-name {
+                font-size: 1.15rem;
+                margin-bottom: 2px;
+            }
+
+            .meta-badges {
+                justify-content: center;
+            }
+
+            /* Badge Dolby Atmos agrandi sur mobile */
+            .dolby-icon {
+                height: 46px;
+            }
+
+            .tracklist-section,
+            .release-footer-info {
+                margin-left: 16px;
+                margin-right: 16px;
+            }
+
+            .tracklist-section {
+                padding: 18px 14px;
+                border-radius: 18px;
+            }
+
+            .track-item {
+                padding: 12px 10px;
+            }
+
+            .track-title {
+                font-size: 0.92rem;
+            }
+
+            .release-footer-info {
+                padding: 18px 20px;
+                border-radius: 16px;
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 
@@ -440,7 +575,6 @@
                 const staticCoverSrc = getMediaUrl(release.coverUrl || release.animatedCoverUrl);
                 const isAnimated = rawCoverUrl && (rawCoverUrl.endsWith('.mp4') || rawCoverUrl.endsWith('.mov'));
 
-                // Injection dynamique des Open Graph Meta Tags (og:title, og:description, og:image, og:audio)
                 const releaseTitleText = `${release.title} - ${release.artistName || 'Artiste'}`;
                 const releaseDescText = `Découvrez ${release.title} par ${release.artistName || 'Artiste'} sur Morgann Music CP.`;
 
@@ -464,7 +598,16 @@
                     } catch (e) { }
                 }
 
+                const artistName = release.artistName || 'Artiste inconnu';
+
                 container.innerHTML = `
+                    <div class="mobile-cover-banner">
+                        ${isAnimated
+                        ? `<video src="${coverSrc}" autoplay loop muted playsinline crossorigin="anonymous" class="mobile-cover-media" id="source-media-mobile"></video>`
+                        : `<img src="${coverSrc}" alt="${release.title}" crossorigin="anonymous" class="mobile-cover-media" id="source-media-mobile">`
+                    }
+                    </div>
+
                     <div class="release-hero">
                         <div class="cover-wrapper">
                             <div class="cover-container" id="cover-box">
@@ -473,12 +616,15 @@
                         : `<img src="${coverSrc}" alt="${release.title}" crossorigin="anonymous" id="source-media">`
                     }
                             </div>
-                            <button class="btn-share" onclick="openShareModal()">🔗 Partager / Intégrer</button>
+                            <button class="btn-share btn-share-desktop" onclick="openShareModal()">🔗 Partager / Intégrer</button>
                         </div>
                         <div class="release-info">
                             <span class="release-type">${release.type || 'Single'}</span>
                             <h1 id="release-title">${release.title}</h1>
-                            <div class="artist-name">${release.artistName || 'Artiste inconnu'}</div>
+                            <div class="artist-name" onclick="goToArtist('${artistName.replace(/'/g, "\\'")}')">${artistName}</div>
+                            
+                            <button class="btn-share btn-share-mobile" onclick="openShareModal()">🔗 Partager / Intégrer</button>
+                            
                             <div class="meta-badges">
                                 ${release.dolbyAtmos ? '<img src="/assets/img/icon/dolby.png" alt="Dolby Atmos" class="dolby-icon">' : ''}
                                 <span class="release-year">${releaseYear}</span>
@@ -495,7 +641,7 @@
                         <p>📅 ${formattedLongDate}</p>
                         <p>🎵 ${tracks.length} piste${tracks.length > 1 ? 's' : ''}</p>
                         <p>℗ ${release.copyrightLineP || 'Morgann Music CP'}</p>
-                        <p>© ${release.copyrightLineC || release.artistName || 'Morgann Music CP'}</p>
+                        <p>© ${release.copyrightLineC || artistName || 'Morgann Music CP'}</p>
                         <p>Label : <strong>${release.labelName || 'Morgann Music CP'}</strong></p>
                     </div>
                 `;
@@ -506,10 +652,8 @@
                     tracksContainer.innerHTML = `<p style="opacity: 0.6; font-style: italic;">Aucune piste audio disponible pour cette sortie.</p>`;
                 } else {
                     tracksContainer.innerHTML = tracks.map((track, index) => {
-                        // Utilise en priorité le fichier WAV/FLAC haute qualité de la piste
                         const trackFileUrl = getMediaUrl(track.fileUrl || track.url);
                         const trackTitle = track.title || release.title;
-                        const artistName = release.artistName || 'Artiste';
 
                         return `
                             <div class="track-item" onclick="triggerPlay('${trackTitle.replace(/'/g, "\\'")}', '${artistName.replace(/'/g, "\\'")}', '${trackFileUrl}', '${staticCoverSrc}')" oncontextmenu="openContextMenu(event, ${index})">
@@ -523,21 +667,17 @@
                                 </div>
                                 <div class="context-menu" id="ctx-menu-${index}">
                                     <div class="context-menu-item" onclick="actionQueue(event, '${trackTitle.replace(/'/g, "\\'")}')">Lire en suite</div>
-                                    <div class="context-menu-item" onclick="actionPlaylist(event, '${trackTitle.replace(/'/g, "\\'")}')">Ajouter à la playlist</div>
-                                    <div class="context-menu-item" onclick="actionFavorite(event, '${trackTitle.replace(/'/g, "\\'")}')">Mettre dans les favoris</div>
                                 </div>
                             </div>
                         `;
                     }).join("");
                 }
 
-                // Fermeture des menus contextuels au clic extérieur
                 document.addEventListener('click', () => {
                     document.querySelectorAll('.context-menu').forEach(m => m.classList.remove('active'));
                 });
 
-                // Application de la couleur unie et douce via Color Thief et mise à jour de la sidebar
-                const mediaElement = document.getElementById('source-media');
+                const mediaElement = document.getElementById('source-media') || document.getElementById('source-media-mobile');
                 if (mediaElement) {
                     const applyThemeFromElement = (el) => {
                         try {
@@ -565,7 +705,6 @@
                                 document.documentElement.style.setProperty('--accent-dynamic', accentColor);
                                 document.body.style.backgroundColor = solidColor;
 
-                                // Application de la couleur sur la sidebar
                                 const sidebar = document.querySelector('.sidebar');
                                 if (sidebar) {
                                     sidebar.style.background = `rgba(255, 255, 255, 0.92)`;
@@ -608,6 +747,10 @@
             }
         }
 
+        function goToArtist(artistName) {
+            window.location.href = `artiste.html?name=${encodeURIComponent(artistName)}`;
+        }
+
         function triggerPlay(title, artist, url, cover) {
             if (!url) {
                 alert("Fichier audio non disponible pour cette piste.");
@@ -623,7 +766,6 @@
             }
         }
 
-        // Gestion propre des menus contextuels pistes
         function toggleContextMenu(event, index) {
             event.stopPropagation();
             const menu = document.getElementById(`ctx-menu-${index}`);
@@ -646,18 +788,6 @@
             e.stopPropagation();
             alert(`"${title}" a été ajouté à la file d'attente.`);
         }
-
-        function actionPlaylist(e, title) {
-            e.stopPropagation();
-            alert(`"${title}" a été ajouté à votre playlist.`);
-        }
-
-        function actionFavorite(e, title) {
-            e.stopPropagation();
-            alert(`"${title}" a été ajouté à vos favoris.`);
-        }
-
-        // Modale de partage / iframe widget complet
         function openShareModal() {
             const currentUrl = window.location.href;
             const releaseTitle = document.getElementById('release-title')?.innerText || 'Sortie musicale';

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio - Morgann Music CP</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- CSS de la sidebar -->
+    <link rel="stylesheet" href="/assets/sidebar/sidebar.css">
+    <style>
+        :root {
+            --bg-primary: #FFF9F2;
+            --bg-secondary: #FFF4DF;
+            --accent-pink: #FF4FA0;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(255, 79, 160, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 50px 40px;
+            background: linear-gradient(145deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .radio-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .radio-logo-wrapper {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 25px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(255, 79, 160, 0.25);
+            border: 4px solid #ffffff;
+            background-color: #eaeaea;
+            position: relative;
+        }
+
+        .radio-logo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .radio-logo-wrapper.playing::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 3px solid var(--accent-pink);
+            border-radius: 50%;
+            animation: pulse-ring 1.8s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .radio-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+
+        .radio-player-box {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .play-btn {
+            background-color: var(--accent-pink);
+            color: #ffffff;
+            border: none;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 79, 160, 0.4);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.08);
+            background-color: #e03b8c;
+        }
+
+        .play-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+            margin-left: 3px;
+        }
+
+        .play-btn.isPlaying svg {
+            margin-left: 0;
+        }
+
+        .radio-status {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-pink);
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 80%;
+            margin-top: 10px;
+        }
+
+        .volume-container svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-secondary);
+        }
+
+        .volume-slider {
+            flex: 1;
+            accent-color: var(--accent-pink);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="sidebar-container"></div>
+
+    <main class="main-content">
+        <div class="radio-container">
+            <div class="radio-logo-wrapper" id="logoWrapper">
+                <img src="https://mm-cp.uk/assets/img/icons/sombre.png" alt="Radio Logo" id="radioCover">
+            </div>
+
+            <h1>Morgann Music Radio</h1>
+            <div class="radio-subtitle" id="radioStatusText">Chargement du direct...</div>
+
+            <div class="radio-player-box">
+                <button class="play-btn" id="playBtn" onclick="toggleRadio()">
+                    <svg id="playIcon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </button>
+                <div class="radio-status" id="liveIndicator">Statique</div>
+
+                <div class="volume-container">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                    </svg>
+                    <input type="range" min="0" max="1" step="0.01" value="1" class="volume-slider" id="volumeSlider"
+                        oninput="changeVolume(this.value)">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <audio id="radioAudio" crossorigin="anonymous"></audio>
+
+    <script src="/assets/sidebar/sidebar.js"></script>
+
+    <script>
+        // On sépare l'API de données radio et l'API de fichiers
+        const API_RADIO = "https://api.radio.play.morgannmusic.uk";
+        const API_MAIN = "https://api.worker.mm-cp.uk"; // L'API qui possède les fichiers
+
+        const radioAudio = document.getElementById("radioAudio");
+        const playBtn = document.getElementById("playBtn");
+        const playIcon = document.getElementById("playIcon");
+        const logoWrapper = document.getElementById("logoWrapper");
+        const radioStatusText = document.getElementById("radioStatusText");
+        const liveIndicator = document.getElementById("liveIndicator");
+        const radioCover = document.getElementById("radioCover");
+
+        let currentStreamUrl = "";
+        let currentSeekOffset = 0;
+
+        async function fetchRadioLive() {
+            try {
+                const res = await fetch(`${API_RADIO}/api/radio`);
+                const data = await res.json();
+
+                if (data && data.success && data.currentTrack) {
+                    let audioPath = data.currentTrack.audioUrl;
+
+                    // 1. Vérifier que l'URL audio existe bien et n'est pas "undefined"
+                    if (audioPath && String(audioPath) !== "undefined") {
+                        // Utiliser API_MAIN au lieu de API_RADIO pour récupérer les fichiers réels
+                        if (!audioPath.startsWith('http://') && !audioPath.startsWith('https://')) {
+                            const cleanPath = audioPath.startsWith('/') ? audioPath : '/' + audioPath;
+                            currentStreamUrl = `${API_MAIN}${cleanPath.startsWith('/api/') ? cleanPath : '/api/files' + cleanPath}`;
+                        } else {
+                            currentStreamUrl = audioPath;
+                        }
+                    } else {
+                        console.error("Aucune URL audio pour cette piste.");
+                        radioStatusText.innerText = "Erreur : Piste audio indisponible";
+                        return; // On arrête là si on ne peut rien lire
+                    }
+
+                    currentSeekOffset = data.seekOffset || 0;
+                    radioStatusText.innerText = `${data.currentTrack.title} - ${data.currentTrack.artist}`;
+
+                    // 2. Vérifier et formater la pochette
+                    let coverPath = data.currentTrack.coverUrl;
+                    if (coverPath && String(coverPath) !== "undefined") {
+                        if (!coverPath.startsWith('http://') && !coverPath.startsWith('https://')) {
+                            const cleanCover = coverPath.startsWith('/') ? coverPath : '/' + coverPath;
+                            radioCover.src = `${API_MAIN}${cleanCover.startsWith('/api/') ? cleanCover : '/api/files' + cleanCover}`;
+                        } else {
+                            radioCover.src = coverPath;
+                        }
+                    } else {
+                        // Image par défaut pour éviter le 404 undefined de la pochette
+                        radioCover.src = "https://mm-cp.uk/assets/img/icons/sombre.png";
+                    }
+
+                    // Ne pas relancer si le même morceau joue déjà
+                    if (!radioAudio.paused && radioAudio.src === currentStreamUrl) {
+                        return;
+                    }
+
+                    radioAudio.src = currentStreamUrl;
+                    radioAudio.currentTime = currentSeekOffset;
+                } else {
+                    radioStatusText.innerText = "Aucun flux en direct disponible";
+                }
+            } catch (e) {
+                console.warn("Erreur de récupération du direct radio :", e);
+                radioStatusText.innerText = "Erreur de connexion au flux";
+            }
+        }
+
+        function toggleRadio() {
+            if (radioAudio.paused) {
+                // On s'assure qu'on a bien une source valide avant de lire
+                if (!radioAudio.src || radioAudio.src.includes("undefined") || radioAudio.src === window.location.href) {
+                    if (currentStreamUrl) {
+                        radioAudio.src = currentStreamUrl;
+                        radioAudio.currentTime = currentSeekOffset;
+                    } else {
+                        console.error("Aucune URL de flux définie.");
+                        return;
+                    }
+                }
+                radioAudio.play().then(() => {
+                    playBtn.classList.add("isPlaying");
+                    logoWrapper.classList.add("playing");
+                    playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    liveIndicator.innerText = "🔴 Live Diffusion";
+                }).catch(err => {
+                    console.error("Erreur lecture audio :", err);
+                });
+            } else {
+                radioAudio.pause();
+                playBtn.classList.remove("isPlaying");
+                logoWrapper.classList.remove("playing");
+                playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                liveIndicator.innerText = "Statique";
+            }
+        }
+
+        function changeVolume(val) {
+            radioAudio.volume = val;
+        }
+
+        window.addEventListener("beforeunload", () => {
+            if (radioAudio) {
+                radioAudio.pause();
+                radioAudio.src = "";
+            }
+        });
+
+        fetchRadioLive();
+    </script>
+</body>
+
+</html>

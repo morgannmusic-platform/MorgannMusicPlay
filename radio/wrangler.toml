@@ -1,0 +1,10 @@
+name = "morgann-music-radio-play"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+routes = [
+  { pattern = "api.radio.play.morgannmusic.uk/*", zone_name = "morgannmusic.uk" }
+]
+
+[vars]
+ENVIRONMENT = "production"
