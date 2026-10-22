@@ -15,6 +15,16 @@
     <meta property="og:audio" content="" id="og-audio">
     <meta property="og:site_name" content="Morgann Music CP">
 
+    <!-- Schéma.org JSON-LD dynamique -->
+    <script type="application/ld+json" id="schemaOrgData">
+    {
+      "@context": "https://schema.org",
+      "@type": "MusicAlbum",
+      "name": "Sortie",
+      "url": "https://mm-cp.uk/"
+    }
+    </script>
+
     <!-- Color Thief pour extraire les couleurs de la pochette -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <!-- CSS de la sidebar -->
@@ -582,6 +592,44 @@
                 document.getElementById('og-title').setAttribute('content', releaseTitleText);
                 document.getElementById('og-description').setAttribute('content', releaseDescText);
                 document.getElementById('og-image').setAttribute('content', window.location.origin + staticCoverSrc);
+
+                // Injection dynamique du schéma JSON-LD depuis la BDD (schemaJson ou schema_json)
+                const customSchema = release.schemaJson || release.schema_json;
+                if (customSchema) {
+                    try {
+                        const schemaObj = typeof customSchema === 'string' ? JSON.parse(customSchema) : customSchema;
+                        document.getElementById('schemaOrgData').textContent = JSON.stringify(schemaObj, null, 2);
+                    } catch (e) {
+                        console.warn("Erreur parsing schemaJson sortie, repli sur le schéma par défaut :", e);
+                        const defaultSchema = {
+                            "@context": "https://schema.org",
+                            "@type": "MusicAlbum",
+                            "name": release.title || "Sortie",
+                            "url": window.location.href,
+                            "image": window.location.origin + staticCoverSrc,
+                            "description": releaseDescText,
+                            "byArtist": {
+                                "@type": "MusicGroup",
+                                "name": release.artistName || "Artiste"
+                            }
+                        };
+                        document.getElementById('schemaOrgData').textContent = JSON.stringify(defaultSchema, null, 2);
+                    }
+                } else {
+                    const defaultSchema = {
+                        "@context": "https://schema.org",
+                        "@type": "MusicAlbum",
+                        "name": release.title || "Sortie",
+                        "url": window.location.href,
+                        "image": window.location.origin + staticCoverSrc,
+                        "description": releaseDescText,
+                        "byArtist": {
+                            "@type": "MusicGroup",
+                            "name": release.artistName || "Artiste"
+                        }
+                    };
+                    document.getElementById('schemaOrgData').textContent = JSON.stringify(defaultSchema, null, 2);
+                }
 
                 const tracks = release.tracks || [];
                 if (tracks.length > 0 && tracks[0].fileUrl) {

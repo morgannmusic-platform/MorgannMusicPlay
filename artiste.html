@@ -699,16 +699,37 @@
             document.getElementById('metaTwitterDesc').setAttribute('content', shareDesc);
             document.getElementById('metaTwitterImage').setAttribute('content', shareImage);
 
-            const schemaData = {
-                "@context": "https://schema.org",
-                "@type": "MusicGroup",
-                "name": name,
-                "url": window.location.href,
-                "image": shareImage,
-                "description": shareDesc,
-                "genre": artist.primaryGenre || artist.genre || "Musique"
-            };
-            document.getElementById('schemaOrgData').textContent = JSON.stringify(schemaData);
+            // Injection dynamique du Schéma JSON-LD s'il est configuré en BDD
+            const customSchema = artist.schemaJson || artist.schema_json;
+            if (customSchema) {
+                try {
+                    const schemaObj = typeof customSchema === 'string' ? JSON.parse(customSchema) : customSchema;
+                    document.getElementById('schemaOrgData').textContent = JSON.stringify(schemaObj, null, 2);
+                } catch (e) {
+                    console.warn("Erreur parsing schemaJson artiste, repli sur le schéma par défaut :", e);
+                    const defaultSchema = {
+                        "@context": "https://schema.org",
+                        "@type": "MusicGroup",
+                        "name": name,
+                        "url": window.location.href,
+                        "image": shareImage,
+                        "description": shareDesc,
+                        "genre": artist.primaryGenre || artist.genre || "Musique"
+                    };
+                    document.getElementById('schemaOrgData').textContent = JSON.stringify(defaultSchema, null, 2);
+                }
+            } else {
+                const defaultSchema = {
+                    "@context": "https://schema.org",
+                    "@type": "MusicGroup",
+                    "name": name,
+                    "url": window.location.href,
+                    "image": shareImage,
+                    "description": shareDesc,
+                    "genre": artist.primaryGenre || artist.genre || "Musique"
+                };
+                document.getElementById('schemaOrgData').textContent = JSON.stringify(defaultSchema, null, 2);
+            }
 
             const useBanner = Boolean(bannerUrl);
             const isMobile = window.innerWidth <= 768;
