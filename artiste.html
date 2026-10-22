@@ -29,7 +29,20 @@
 
     <!-- Bibliothèque Color Thief -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <!-- CSS de la sidebar -->
+    <link rel="stylesheet" href="/assets/sidebar/sidebar.css">
+    <!-- CSS du lecteur flottant -->
+    <link rel="stylesheet" href="/assets/player/player.css">
     <style>
+        :root {
+            --bg-primary: #fce4ec;
+            --accent-dynamic: #121212;
+            --text-primary: #121212;
+            --hero-text: #121212;
+            --hero-text-secondary: #333333;
+            --card-bg: #ffffff;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -38,14 +51,24 @@
         }
 
         body {
-            background-color: #fce4ec;
-            color: #121212;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            transition: background-color 0.8s ease, color 0.8s ease;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: background 0.6s ease;
-            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 150px;
+            transition: margin-left 0.3s ease;
         }
 
         .page-wrapper {
@@ -131,17 +154,17 @@
             text-align: center;
             z-index: 10;
             pointer-events: auto;
-            will-change: transform;
         }
 
         .artist-name-blurred {
             font-size: 3.2rem;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--hero-text);
             position: relative;
             padding: 5px 20px;
             display: inline-block;
             text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            transition: color 0.5s ease;
         }
 
         .artist-name-blurred::before {
@@ -160,8 +183,9 @@
         .artist-name-plain {
             font-size: 2.8rem;
             font-weight: 800;
-            color: #121212;
+            color: var(--hero-text);
             text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
+            transition: color 0.5s ease;
         }
 
         .artist-logo {
@@ -419,6 +443,11 @@
 
         /* 3. Sur Téléphone : Si pas de bannière, la PDP se transforme en bannière avec fondu */
         @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding-bottom: 160px;
+            }
+
             .mobile-pdp-banner {
                 width: 100%;
                 height: 380px;
@@ -479,52 +508,66 @@
 
 <body>
 
-    <div class="page-wrapper">
-        <div id="headerSectionContainer" style="width: 100%;"></div>
+    <div id="sidebar-container"></div>
+    <div id="player-container"></div>
 
-        <div class="content-section">
-            <div class="artist-info-card hidden" id="artistInfoCard">
-                <div class="artist-genres" id="artistGenresList"></div>
-                <div class="artist-bio hidden" id="artistBio"></div>
-            </div>
+    <div class="main-content">
+        <div class="page-wrapper">
+            <div id="headerSectionContainer" style="width: 100%;"></div>
 
-            <div class="main-links-grid" id="mainLinksGrid"></div>
-
-            <a href="#" class="latest-release-card hidden" id="latestReleaseCard">
-                <div class="latest-header">Dernière sortie</div>
-                <div class="latest-body">
-                    <img id="latestCover" src="" alt="Cover" class="latest-cover">
-                    <div class="latest-info">
-                        <div class="latest-title" id="latestTitle">Titre</div>
-                        <div class="latest-artist" id="latestArtist">Artiste</div>
-                        <span class="latest-btn">Écouter</span>
-                    </div>
+            <div class="content-section">
+                <div class="artist-info-card hidden" id="artistInfoCard">
+                    <div class="artist-genres" id="artistGenresList"></div>
+                    <div class="artist-bio hidden" id="artistBio"></div>
                 </div>
-            </a>
 
-            <div class="other-links-section hidden" id="otherLinksSection">
-                <div class="section-title">Autres liens & réseaux</div>
-                <div class="other-links-list" id="otherLinksList"></div>
-            </div>
+                <div class="main-links-grid" id="mainLinksGrid"></div>
 
-            <div class="back-home-container">
-                <a href="/" class="back-home-btn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                    </svg>
-                    Retour à l'accueil
+                <a href="#" class="latest-release-card hidden" id="latestReleaseCard">
+                    <div class="latest-header">Dernière sortie</div>
+                    <div class="latest-body">
+                        <img id="latestCover" src="" alt="Cover" class="latest-cover">
+                        <div class="latest-info">
+                            <div class="latest-title" id="latestTitle">Titre</div>
+                            <div class="latest-artist" id="latestArtist">Artiste</div>
+                            <span class="latest-btn">Écouter</span>
+                        </div>
+                    </div>
                 </a>
+
+                <div class="other-links-section hidden" id="otherLinksSection">
+                    <div class="section-title">Autres liens & réseaux</div>
+                    <div class="other-links-list" id="otherLinksList"></div>
+                </div>
+
+                <div class="back-home-container">
+                    <a href="/" class="back-home-btn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                        </svg>
+                        Retour à l'accueil
+                    </a>
+                </div>
             </div>
         </div>
     </div>
+
+    <script src="/assets/sidebar/sidebar.js"></script>
+    <script src="/assets/player/player.js"></script>
 
     <script>
         const API_BASE = "https://api.worker.mm-cp.uk";
 
         function resolveImageUrl(url) {
             if (!url) return '';
+            if (url.includes('/api/proxy-download')) {
+                return url;
+            }
             if (url.startsWith('http://') || url.startsWith('https://')) {
-                if (url.includes('stock.mm-cp.uk') || url.includes(API_BASE)) {
+                if (url.includes('stock.mm-cp.uk')) {
+                    return `${API_BASE}/api/proxy-download?url=${encodeURIComponent(url)}`;
+                }
+                if (url.includes(API_BASE)) {
                     return url;
                 }
                 return `${API_BASE}/api/proxy-download?url=${encodeURIComponent(url)}`;
@@ -598,10 +641,8 @@
 
             if (customSchema && typeof customSchema === 'string') {
                 if (customSchema.includes('<script')) {
-                    // Si la BDD contient directement les balises <script...>, on les injecte brut dans le head
                     schemaContainer.innerHTML = customSchema;
                 } else {
-                    // Si c'est une chaîne JSON brute
                     const scriptTag = document.createElement('script');
                     scriptTag.type = 'application/ld+json';
                     scriptTag.textContent = customSchema;
@@ -613,7 +654,6 @@
                 scriptTag.textContent = JSON.stringify(customSchema, null, 2);
                 schemaContainer.appendChild(scriptTag);
             } else {
-                // Schéma par défaut si schema_json est vide
                 const defaultSchema = {
                     "@context": "https://schema.org",
                     "@type": "MusicGroup",
@@ -637,7 +677,7 @@
 
                 headerContainer.innerHTML = `
                     <div class="banner-wrapper" id="headerWrapper">
-                        <img src="${proxyBannerUrl}" alt="${name}" class="banner-img" id="headerImg">
+                        <img src="${proxyBannerUrl}" alt="${name}" class="banner-img" id="headerImg" crossorigin="anonymous">
                         <div class="banner-overlay" id="bannerOverlay">
                             <div class="artist-title-container" id="titleContainer">
                                 ${logoUrl ? `<img src="${logoUrl}" alt="${name}" class="artist-logo">` : `<h1 class="artist-name-blurred" data-text="${name}">${name}</h1>`}
@@ -647,7 +687,6 @@
                 `;
 
                 setupColorThief(proxyBannerUrl);
-                initParallaxEffect();
             } else {
                 const defaultPhoto = 'https://mm-cp.uk/assets/img/icons/sombre.png';
                 const finalPhotoUrl = photoUrl || defaultPhoto;
@@ -655,7 +694,7 @@
                 if (isMobile) {
                     headerContainer.innerHTML = `
                         <div class="mobile-pdp-banner">
-                            <img src="${finalPhotoUrl}" alt="${name}" class="mobile-pdp-img" onerror="this.src='${defaultPhoto}'">
+                            <img src="${finalPhotoUrl}" alt="${name}" class="mobile-pdp-img" id="headerImg" crossorigin="anonymous" onerror="this.src='${defaultPhoto}'">
                             <div class="mobile-pdp-overlay">
                                 <div class="artist-title-container">
                                     ${logoUrl ? `<img src="${logoUrl}" alt="${name}" class="artist-logo">` : `<h1 class="artist-name-blurred" data-text="${name}">${name}</h1>`}
@@ -667,7 +706,7 @@
                     headerContainer.innerHTML = `
                         <div class="profile-hero-section">
                             <div class="profile-avatar-wrapper">
-                                <img src="${finalPhotoUrl}" alt="${name}" class="profile-avatar-img" onerror="this.src='${defaultPhoto}'">
+                                <img src="${finalPhotoUrl}" alt="${name}" class="profile-avatar-img" id="headerImg" crossorigin="anonymous" onerror="this.src='${defaultPhoto}'">
                             </div>
                             <div class="artist-title-container">
                                 ${logoUrl ? `<img src="${logoUrl}" alt="${name}" class="artist-logo">` : `<h1 class="artist-name-plain">${name}</h1>`}
@@ -797,47 +836,108 @@
             thiefImg.crossOrigin = "anonymous";
 
             let finalThiefUrl = imageUrl;
-            if (imageUrl.includes('stock.mm-cp.uk') && !imageUrl.includes(API_BASE)) {
+            if (imageUrl.includes('stock.mm-cp.uk') && !imageUrl.includes(API_BASE) && !imageUrl.includes('/api/proxy-download')) {
                 finalThiefUrl = `${API_BASE}/api/proxy-download?url=${encodeURIComponent(imageUrl)}`;
             }
 
             thiefImg.src = finalThiefUrl;
             thiefImg.onload = function () {
                 try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = thiefImg.naturalWidth || thiefImg.width || 300;
+                    canvas.height = thiefImg.naturalHeight || thiefImg.height || 300;
+                    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                    ctx.drawImage(thiefImg, 0, 0, canvas.width, canvas.height);
+
+                    const w = canvas.width;
+                    const h = canvas.height;
+                    const sampleStep = Math.max(1, Math.floor(w / 20));
+                    let darkEdgeCount = 0;
+                    let totalEdgeCount = 0;
+
+                    const isDark = (r, g, b) => r < 35 && g < 35 && b < 35;
+                    const marginX = Math.floor(w * 0.12);
+                    const marginY = Math.floor(h * 0.12);
+
+                    for (let x = 0; x < w; x += sampleStep) {
+                        for (let y = 0; y < marginY; y += sampleStep) {
+                            const p = ctx.getImageData(x, y, 1, 1).data;
+                            totalEdgeCount++;
+                            if (isDark(p[0], p[1], p[2])) darkEdgeCount++;
+                        }
+                        for (let y = h - marginY; y < h; y += sampleStep) {
+                            const p = ctx.getImageData(x, y, 1, 1).data;
+                            totalEdgeCount++;
+                            if (isDark(p[0], p[1], p[2])) darkEdgeCount++;
+                        }
+                    }
+                    for (let y = 0; y < h; y += sampleStep) {
+                        for (let x = 0; x < marginX; x += sampleStep) {
+                            const p = ctx.getImageData(x, y, 1, 1).data;
+                            totalEdgeCount++;
+                            if (isDark(p[0], p[1], p[2])) darkEdgeCount++;
+                        }
+                        for (let x = w - marginX; x < w; x += sampleStep) {
+                            const p = ctx.getImageData(x, y, 1, 1).data;
+                            totalEdgeCount++;
+                            if (isDark(p[0], p[1], p[2])) darkEdgeCount++;
+                        }
+                    }
+
+                    const edgeBlackRatio = totalEdgeCount > 0 ? (darkEdgeCount / totalEdgeCount) : 0;
+                    const hasWideBlackBorders = edgeBlackRatio > 0.55;
+
                     const colorThief = new ColorThief();
-                    const color = colorThief.getColor(thiefImg);
-                    if (color) {
-                        const r = color[0], g = color[1], b = color[2];
-                        const r2 = Math.min(255, Math.max(r, 120) * 1.4);
-                        const g2 = Math.min(255, Math.max(g, 120) * 1.4);
-                        const b2 = Math.min(255, Math.max(b, 120) * 1.4);
-                        document.body.style.background = `linear-gradient(135deg, rgb(${r2},${g2},${b2}), rgb(${r},${g},${b}))`;
+                    const palette = colorThief.getPalette(canvas, 2);
+                    if (palette && palette.length > 0) {
+                        const [r, g, b] = palette[0];
+                        const accentColor = `rgb(${r}, ${g}, ${b})`;
+
+                        const solidColor = hasWideBlackBorders ? '#000000' : `rgb(${r}, ${g}, ${b})`;
+                        document.documentElement.style.setProperty('--accent-dynamic', accentColor);
+                        document.body.style.backgroundColor = solidColor;
+
+                        if (hasWideBlackBorders) {
+                            document.documentElement.style.setProperty('--hero-text', '#ffffff');
+                            document.documentElement.style.setProperty('--hero-text-secondary', 'rgba(255, 255, 255, 0.85)');
+                        } else {
+                            const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+                            if (luminance < 128) {
+                                document.documentElement.style.setProperty('--hero-text', '#ffffff');
+                                document.documentElement.style.setProperty('--hero-text-secondary', 'rgba(255, 255, 255, 0.85)');
+                            } else {
+                                document.documentElement.style.setProperty('--hero-text', '#121212');
+                                document.documentElement.style.setProperty('--hero-text-secondary', '#333333');
+                            }
+                        }
+
+                        let dynamicStyleTag = document.getElementById('dynamic-sidebar-style');
+                        if (!dynamicStyleTag) {
+                            dynamicStyleTag = document.createElement('style');
+                            dynamicStyleTag.id = 'dynamic-sidebar-style';
+                            document.head.appendChild(dynamicStyleTag);
+                        }
+                        dynamicStyleTag.innerHTML = `
+                            .sidebar {
+                                background: #ffffff !important;
+                            }
+                            .sidebar a, .sidebar .nav-item {
+                                color: #1d1d1f !important;
+                            }
+                            .sidebar a.active, .sidebar .nav-item.active {
+                                background-color: rgba(${r}, ${g}, ${b}, 0.15) !important;
+                                color: ${accentColor} !important;
+                            }
+                            .sidebar a:hover, .sidebar .nav-item:hover {
+                                background-color: rgba(0, 0, 0, 0.04) !important;
+                                color: ${accentColor} !important;
+                            }
+                        `;
                     }
                 } catch (e) {
-                    console.log("Color Thief erreur:", e);
+                    console.log("Color Thief / Analyse des bords ignorée :", e);
                 }
             };
-        }
-
-        function initParallaxEffect() {
-            window.addEventListener('scroll', () => {
-                const scrollY = window.scrollY;
-                const headerImg = document.getElementById('headerImg');
-                const titleContainer = document.getElementById('titleContainer');
-                const headerWrapper = document.getElementById('headerWrapper');
-
-                if (headerImg) {
-                    const blurAmount = Math.min(15, scrollY * 0.04);
-                    headerImg.style.filter = `brightness(${Math.max(0.6, 0.95 - scrollY * 0.001)}) blur(${blurAmount}px)`;
-                }
-
-                if (titleContainer && headerWrapper) {
-                    const maxHeaderHeight = headerWrapper.offsetHeight;
-                    const maxTranslate = maxHeaderHeight * 0.35;
-                    const parallaxY = Math.min(maxTranslate, scrollY * 0.2);
-                    titleContainer.style.transform = `translateY(${parallaxY}px)`;
-                }
-            });
         }
 
         window.addEventListener('DOMContentLoaded', loadArtistPage);

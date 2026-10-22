@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title id="page-meta-title">Morgann Music Play - Sortie</title>
 
     <!-- Balises Open Graph / SEO dynamiques pour le partage -->
@@ -30,7 +32,9 @@
             --accent-dynamic: #FF4FA0;
             --text-primary: #1d1d1f;
             --text-secondary: #6e6e73;
-            --card-bg: rgba(255, 255, 255, 0.88);
+            --hero-text: #1d1d1f;
+            --hero-text-secondary: #6e6e73;
+            --card-bg: #ffffff;
         }
 
         * {
@@ -46,16 +50,14 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
-            transition: background-color 0.8s ease;
+            transition: background-color 0.8s ease, color 0.8s ease;
         }
 
         .main-content {
             margin-left: 260px;
             flex: 1;
             padding: 60px 50px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: transparent;
             min-height: 100vh;
             padding-bottom: 150px;
             transition: margin-left 0.3s ease;
@@ -113,7 +115,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: var(--text-primary);
+            color: #1d1d1f;
             transition: background 0.2s, transform 0.2s;
             width: 100%;
             justify-content: center;
@@ -144,23 +146,25 @@
             transition: color 0.5s ease;
         }
 
-        h1 {
+        .release-hero h1 {
             font-size: 3rem;
             font-weight: 800;
             letter-spacing: -0.02em;
             margin-bottom: 10px;
             line-height: 1.1;
-            color: var(--text-primary);
+            color: var(--hero-text);
+            transition: color 0.5s ease;
         }
 
         .artist-name {
             font-size: 1.4rem;
             font-weight: 600;
+            color: var(--hero-text);
             opacity: 0.85;
             margin-bottom: 12px;
             cursor: pointer;
             display: inline-block;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s, color 0.5s ease;
         }
 
         .artist-name:hover {
@@ -180,32 +184,35 @@
             height: 52px;
             width: auto;
             object-fit: contain;
+            transition: filter 0.5s ease;
         }
 
         .release-year {
             font-size: 1.1rem;
+            color: var(--hero-text);
             opacity: 0.85;
             font-weight: 600;
+            transition: color 0.5s ease;
         }
 
-        /* Section Tracklist */
+        /* Section Tracklist (Fond blanc fixe, texte fixe sombre) */
         .tracklist-section {
             background: var(--card-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
             border-radius: 24px;
             padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
             margin-bottom: 30px;
             position: relative;
             z-index: 1;
+            color: #1d1d1f;
         }
 
-        h2 {
+        .tracklist-section h2 {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 20px;
+            color: #1d1d1f;
         }
 
         .track-item {
@@ -218,6 +225,7 @@
             cursor: pointer;
             transition: background 0.2s ease, transform 0.2s ease;
             position: relative;
+            color: #1d1d1f;
         }
 
         .track-item:hover {
@@ -240,6 +248,7 @@
             width: 24px;
             text-align: center;
             flex-shrink: 0;
+            color: #1d1d1f;
         }
 
         .track-title {
@@ -248,6 +257,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: #1d1d1f;
         }
 
         .track-right {
@@ -260,6 +270,7 @@
         .track-duration {
             font-size: 0.9rem;
             opacity: 0.6;
+            color: #1d1d1f;
         }
 
         .btn-track-menu {
@@ -271,6 +282,7 @@
             padding: 5px 8px;
             border-radius: 8px;
             transition: opacity 0.2s, background 0.2s;
+            color: #1d1d1f;
         }
 
         .track-item:hover .btn-track-menu {
@@ -315,19 +327,17 @@
             color: var(--accent-dynamic);
         }
 
-        /* Infos bas de page */
+        /* Infos bas de page (Fond blanc fixe, texte fixe sombre) */
         .release-footer-info {
             background: var(--card-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
             border-radius: 20px;
             padding: 25px 30px;
             font-size: 0.95rem;
-            color: var(--text-secondary);
+            color: #6e6e73;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             position: relative;
             z-index: 1;
@@ -335,6 +345,11 @@
 
         .release-footer-info p {
             line-height: 1.5;
+            color: #6e6e73;
+        }
+
+        .release-footer-info strong {
+            color: #1d1d1f;
         }
 
         /* Modale de partage */
@@ -371,6 +386,7 @@
         .modal-card h3 {
             font-size: 1.3rem;
             font-weight: 700;
+            color: #1d1d1f;
         }
 
         .modal-card label {
@@ -379,6 +395,7 @@
             opacity: 0.7;
             margin-bottom: 4px;
             display: block;
+            color: #1d1d1f;
         }
 
         .modal-card input,
@@ -390,6 +407,7 @@
             font-size: 0.85rem;
             background: #f9f9f9;
             resize: none;
+            color: #1d1d1f;
         }
 
         .modal-close {
@@ -417,7 +435,6 @@
                 padding: 0 0 160px 0;
             }
 
-            /* Bannière mobile : fondu baissé (image lisible plus bas avant de s'estomper) */
             .mobile-cover-banner {
                 display: block;
                 width: 100%;
@@ -466,7 +483,7 @@
                 justify-content: center;
             }
 
-            h1 {
+            .release-hero h1 {
                 font-size: 2.1rem;
                 margin-bottom: 4px;
             }
@@ -480,7 +497,6 @@
                 justify-content: center;
             }
 
-            /* Badge Dolby Atmos agrandi sur mobile */
             .dolby-icon {
                 height: 46px;
             }
@@ -584,7 +600,7 @@
                 document.getElementById('page-meta-title').innerText = releaseTitleText;
                 document.getElementById('og-title').setAttribute('content', releaseTitleText);
                 document.getElementById('og-description').setAttribute('content', releaseDescText);
-                document.getElementById('og-image').setAttribute('content', window.location.origin + staticCoverSrc);
+                document.getElementById('og-image').setAttribute('content', staticCoverSrc);
 
                 // Injection dynamique du schéma JSON-LD depuis la BDD (schema_json ou schemaJson)
                 const schemaTag = document.getElementById('schemaOrgData');
@@ -628,7 +644,7 @@
 
                 const tracks = release.tracks || [];
                 if (tracks.length > 0 && tracks[0].fileUrl) {
-                    const primaryAudioWavUrl = window.location.origin + getMediaUrl(tracks[0].fileUrl);
+                    const primaryAudioWavUrl = getMediaUrl(tracks[0].fileUrl);
                     document.getElementById('og-audio').setAttribute('content', primaryAudioWavUrl);
                 }
 
@@ -725,35 +741,89 @@
                     const applyThemeFromElement = (el) => {
                         try {
                             let imgTarget = el;
-                            if (el.tagName === 'VIDEO') {
-                                const canvas = document.createElement('canvas');
-                                canvas.width = el.videoWidth || 300;
-                                canvas.height = el.videoHeight || 300;
-                                const ctx = canvas.getContext('2d');
-                                ctx.drawImage(el, 0, 0, canvas.width, canvas.height);
-                                imgTarget = canvas;
+                            const canvas = document.createElement('canvas');
+                            canvas.width = el.tagName === 'VIDEO' ? (el.videoWidth || 300) : (el.naturalWidth || el.width || 300);
+                            canvas.height = el.tagName === 'VIDEO' ? (el.videoHeight || 300) : (el.naturalHeight || el.height || 300);
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(el, 0, 0, canvas.width, canvas.height);
+
+                            // Analyse des bords de l'image (contours larges) pour détecter un cadre/fond noir massif
+                            const w = canvas.width;
+                            const h = canvas.height;
+                            const sampleStep = Math.max(1, Math.floor(w / 20));
+                            let darkEdgeCount = 0;
+                            let totalEdgeCount = 0;
+
+                            // Fonction pour tester si un pixel est proche du noir
+                            const isDark = (r, g, b) => r < 35 && g < 35 && b < 35;
+
+                            // Échantillonner les marges (bords de l'image sur 10% de l'épaisseur)
+                            const marginX = Math.floor(w * 0.12);
+                            const marginY = Math.floor(h * 0.12);
+
+                            // Bord haut et bord bas
+                            for (let x = 0; x < w; x += sampleStep) {
+                                for (let y = 0; y < marginY; y += sampleStep) {
+                                    const p = ctx.getImageData(x, y, 1, 1).data;
+                                    totalEdgeCount++;
+                                    if (isDark(p[0], p[1], p[2])) darkEdgeCount++;
+                                }
+                                for (let y = h - marginY; y < h; y += sampleStep) {
+                                    const p = ctx.getImageData(x, y, 1, 1).data;
+                                    totalEdgeCount++;
+                                    if (isDark(p[0], p[1], p[2])) darkEdgeCount++;
+                                }
+                            }
+                            // Bord gauche et bord droit
+                            for (let y = 0; y < h; y += sampleStep) {
+                                for (let x = 0; x < marginX; x += sampleStep) {
+                                    const p = ctx.getImageData(x, y, 1, 1).data;
+                                    totalEdgeCount++;
+                                    if (isDark(p[0], p[1], p[2])) darkEdgeCount++;
+                                }
+                                for (let x = w - marginX; x < w; x += sampleStep) {
+                                    const p = ctx.getImageData(x, y, 1, 1).data;
+                                    totalEdgeCount++;
+                                    if (isDark(p[0], p[1], p[2])) darkEdgeCount++;
+                                }
                             }
 
+                            const edgeBlackRatio = totalEdgeCount > 0 ? (darkEdgeCount / totalEdgeCount) : 0;
+                            const hasWideBlackBorders = edgeBlackRatio > 0.55;
+
                             const colorThief = new ColorThief();
-                            const palette = colorThief.getPalette(imgTarget, 2);
+                            const palette = colorThief.getPalette(canvas, 2);
                             if (palette && palette.length > 0) {
                                 const [r, g, b] = palette[0];
-
-                                const mixR = Math.round(r * 0.35 + 255 * 0.65);
-                                const mixG = Math.round(g * 0.35 + 249 * 0.65);
-                                const mixB = Math.round(b * 0.35 + 242 * 0.65);
-                                const solidColor = `rgb(${mixR}, ${mixG}, ${mixB})`;
                                 const accentColor = `rgb(${r}, ${g}, ${b})`;
 
+                                // Si la pochette a de larges contours noirs, le fond de la page devient noir pur
+                                const solidColor = hasWideBlackBorders ? '#000000' : `rgb(${r}, ${g}, ${b})`;
                                 document.documentElement.style.setProperty('--accent-dynamic', accentColor);
                                 document.body.style.backgroundColor = solidColor;
 
-                                const sidebar = document.querySelector('.sidebar');
-                                if (sidebar) {
-                                    sidebar.style.background = `rgba(255, 255, 255, 0.92)`;
-                                    sidebar.style.backdropFilter = 'blur(25px)';
+                                // Si le fond est noir (contours larges noirs), texte hero en blanc et Dolby inversé
+                                if (hasWideBlackBorders) {
+                                    document.documentElement.style.setProperty('--hero-text', '#ffffff');
+                                    document.documentElement.style.setProperty('--hero-text-secondary', 'rgba(255, 255, 255, 0.85)');
+                                    const dolbyImg = document.querySelector('.dolby-icon');
+                                    if (dolbyImg) dolbyImg.style.filter = 'invert(1)';
+                                } else {
+                                    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+                                    if (luminance < 128) {
+                                        document.documentElement.style.setProperty('--hero-text', '#ffffff');
+                                        document.documentElement.style.setProperty('--hero-text-secondary', 'rgba(255, 255, 255, 0.85)');
+                                        const dolbyImg = document.querySelector('.dolby-icon');
+                                        if (dolbyImg) dolbyImg.style.filter = 'invert(1)';
+                                    } else {
+                                        document.documentElement.style.setProperty('--hero-text', '#1d1d1f');
+                                        document.documentElement.style.setProperty('--hero-text-secondary', '#6e6e73');
+                                        const dolbyImg = document.querySelector('.dolby-icon');
+                                        if (dolbyImg) dolbyImg.style.filter = 'none';
+                                    }
                                 }
 
+                                // Navbar / Sidebar blanche avec liens aux couleurs de la page
                                 let dynamicStyleTag = document.getElementById('dynamic-sidebar-style');
                                 if (!dynamicStyleTag) {
                                     dynamicStyleTag = document.createElement('style');
@@ -761,18 +831,24 @@
                                     document.head.appendChild(dynamicStyleTag);
                                 }
                                 dynamicStyleTag.innerHTML = `
+                                    .sidebar {
+                                        background: #ffffff !important;
+                                    }
+                                    .sidebar a, .sidebar .nav-item {
+                                        color: #1d1d1f !important;
+                                    }
                                     .sidebar a.active, .sidebar .nav-item.active {
-                                        background-color: rgba(${r}, ${g}, ${b}, 0.2) !important;
+                                        background-color: rgba(${r}, ${g}, ${b}, 0.15) !important;
                                         color: ${accentColor} !important;
                                     }
-                                    .sidebar a:hover {
+                                    .sidebar a:hover, .sidebar .nav-item:hover {
                                         background-color: rgba(0, 0, 0, 0.04) !important;
                                         color: ${accentColor} !important;
                                     }
                                 `;
                             }
                         } catch (e) {
-                            console.log("Color Thief extraction ignorée :", e);
+                            console.log("Color Thief / Analyse des bords ignorée :", e);
                         }
                     };
 
