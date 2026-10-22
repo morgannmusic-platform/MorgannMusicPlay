@@ -242,9 +242,11 @@
 
         .main-links-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            grid-template-columns: 1fr;
             gap: 15px;
             width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
         }
 
         .platform-btn {
@@ -268,12 +270,6 @@
             background-color: #ffffff;
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .platform-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
         }
 
         .latest-release-card {
@@ -359,10 +355,12 @@
             background-color: #333333;
         }
 
-        .other-links-section {
+        /* Styles Discographie Séparée */
+        .discography-section {
             display: flex;
             flex-direction: column;
             gap: 12px;
+            width: 100%;
         }
 
         .section-title {
@@ -373,30 +371,58 @@
             letter-spacing: 0.5px;
         }
 
-        .other-links-list {
+        .discography-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        .release-item-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.5);
             display: flex;
             flex-direction: column;
-            gap: 10px;
-        }
-
-        .other-link-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 18px;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #121212;
             text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: background 0.2s, transform 0.1s;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
 
-        .other-link-item:hover {
+        .release-item-card:hover {
+            transform: translateY(-3px);
             background-color: #ffffff;
-            transform: translateX(4px);
+        }
+
+        .release-item-cover {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background-color: #ddd;
+        }
+
+        .release-item-info {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .release-item-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #121212;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .release-item-type {
+            font-size: 0.75rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .back-home-container {
@@ -535,18 +561,16 @@
                     </div>
                 </a>
 
-                <div class="other-links-section hidden" id="otherLinksSection">
-                    <div class="section-title">Autres liens & réseaux</div>
-                    <div class="other-links-list" id="otherLinksList"></div>
+                <!-- Discographie : Albums -->
+                <div class="discography-section hidden" id="albumsSection">
+                    <div class="section-title">Albums</div>
+                    <div class="discography-grid" id="albumsGrid"></div>
                 </div>
 
-                <div class="back-home-container">
-                    <a href="/" class="back-home-btn">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                        </svg>
-                        Retour à l'accueil
-                    </a>
+                <!-- Discographie : Singles & EPs -->
+                <div class="discography-section hidden" id="singlesSection">
+                    <div class="section-title">Singles & EPs</div>
+                    <div class="discography-grid" id="singlesGrid"></div>
                 </div>
             </div>
         </div>
@@ -754,38 +778,11 @@
             const mainGrid = document.getElementById('mainLinksGrid');
             const mainLinks = [];
 
-            const appleUrl = artist.linkApple || artist.appleMusicId || artist.apple_url;
-            const spotifyUrl = artist.linkSpotify || artist.spotifyId || artist.spotify_url;
-            const instaUrl = artist.linkInsta || artist.instagramUrl || artist.instagram_url;
-            const ytUrl = artist.linkYtChan || artist.linkYtMusic || artist.youtubeUrl || artist.youtube_url;
-
-            if (appleUrl) {
-                mainLinks.push(`<a href="${appleUrl.startsWith('http') ? appleUrl : 'https://music.apple.com/' + appleUrl}" target="_blank" class="platform-btn">
-                    <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.89 5.37c.61-.75 1.02-1.8 0.91-2.85-.9.04-1.99.6-2.62 1.35-.56.65-1.05 1.71-.92 2.74 1 .08 2.02-.49 2.63-1.24z"/></svg>
-                    Apple Music
-                </a>`);
-            }
-
-            if (spotifyUrl) {
-                mainLinks.push(`<a href="${spotifyUrl.startsWith('http') ? spotifyUrl : 'https://open.spotify.com/artist/' + spotifyUrl}" target="_blank" class="platform-btn">
-                    <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.521 17.34c-.24.359-.72.48-1.081.24-2.999-1.8-6.78-2.221-11.22-1.2-.42.12-.84-.18-.96-.6-.12-.42.18-.84.6-.96 4.8-1.08 9.06-.6 12.48 1.56.36.24.48.72.18 1.08zm1.56-3.48c-.3.48-.9.6-1.38.3-3.42-2.1-8.64-2.7-12.66-1.44-.54.18-1.14-.12-1.32-.66-.18-.54.12-1.14.66-1.32 4.44-1.38 10.2-1.74 14.28.66.48.3.6.9.3 1.44zm.12-3.66C14.4 7.92 8.34 7.74 4.86 8.82c-.66.18-1.38-.18-1.56-.84-.18-.66.18-1.38.84-1.56 4.14-1.26 10.92-1.02 15.36 1.62.6.36.78 1.14.42 1.74-.36.6-1.14.78-1.74.42z"/></svg>
-                    Spotify
-                </a>`);
-            }
-
-            if (instaUrl) {
-                mainLinks.push(`<a href="${instaUrl.startsWith('http') ? instaUrl : 'https://instagram.com/' + instaUrl}" target="_blank" class="platform-btn">
-                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                    Instagram
-                </a>`);
-            }
-
-            if (ytUrl) {
-                mainLinks.push(`<a href="${ytUrl.startsWith('http') ? ytUrl : 'https://youtube.com/' + ytUrl}" target="_blank" class="platform-btn">
-                    <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    YouTube
-                </a>`);
-            }
+            const artistLinkId = artist.id || artist._id || '';
+            mainLinks.push(`<a href="https://link.morgannmusic.uk/artiste?id=${artistLinkId}" target="_blank" class="platform-btn">
+                <img src="https://link.morgannmusic.uk/logo%20linkkkkkk%201.png" alt="Link" style="width: 20px; height: 20px; object-fit: contain; border-radius: 4px;">
+                Morgann Link
+            </a>`);
 
             if (mainLinks.length > 0) {
                 mainGrid.innerHTML = mainLinks.join('');
@@ -797,6 +794,8 @@
                 (r.artistName && r.artistName.toLowerCase() === name.toLowerCase()) ||
                 (r.artist_name && r.artist_name.toLowerCase() === name.toLowerCase())
             );
+
+            // Gestion de la dernière sortie
             const latest = artistReleases.length > 0 ? artistReleases[0] : (allReleases.length > 0 ? allReleases[0] : null);
 
             if (latest) {
@@ -810,24 +809,60 @@
                 document.getElementById('latestReleaseCard').classList.remove('hidden');
             }
 
-            const otherLinksList = document.getElementById('otherLinksList');
-            const otherLinks = [];
+            // Gestion Discographie : Séparation Albums et Singles/EPs
+            const albumsSection = document.getElementById('albumsSection');
+            const albumsGrid = document.getElementById('albumsGrid');
+            const singlesSection = document.getElementById('singlesSection');
+            const singlesGrid = document.getElementById('singlesGrid');
 
-            if (artist.linkAmazon || artist.amazon_url) otherLinks.push({ name: 'Amazon Music', url: artist.linkAmazon || artist.amazon_url });
-            if (artist.linkSoundcloud || artist.soundcloud_url) otherLinks.push({ name: 'SoundCloud', url: artist.linkSoundcloud || artist.soundcloud_url });
-            if (artist.linkWebsite || artist.website_url) otherLinks.push({ name: 'Site officiel', url: artist.linkWebsite || artist.website_url });
-            if (artist.linkFb || artist.facebookUrl || artist.facebook_url) otherLinks.push({ name: 'Facebook', url: artist.linkFb || artist.facebookUrl || artist.facebook_url });
-            if (artist.linkX || artist.twitter_url) otherLinks.push({ name: 'X (Twitter)', url: artist.linkX || artist.twitter_url });
-            if (artist.linkWiki || artist.wikipedia_url) otherLinks.push({ name: 'Wikipédia', url: artist.linkWiki || artist.wikipedia_url });
+            const albums = [];
+            const singlesEps = [];
 
-            if (otherLinks.length > 0) {
-                otherLinksList.innerHTML = otherLinks.map(l => `
-                    <a href="${l.url.startsWith('http') ? l.url : 'https://' + l.url}" target="_blank" class="other-link-item">
-                        <span>${l.name}</span>
-                        <span>&rarr;</span>
-                    </a>
-                `).join('');
-                document.getElementById('otherLinksSection').classList.remove('hidden');
+            artistReleases.forEach(r => {
+                const type = (r.type || r.releaseType || r.format || '').toLowerCase();
+                if (type.includes('album') || type === 'lp') {
+                    albums.push(r);
+                } else {
+                    singlesEps.push(r);
+                }
+            });
+
+            if (albums.length > 0) {
+                albumsGrid.innerHTML = albums.map(r => {
+                    const cover = resolveImageUrl(r.coverUrl || r.cover_url || '');
+                    const title = r.title || 'Album';
+                    const relId = r.id || r._id || '';
+                    const rType = r.type || r.releaseType || 'Album';
+                    return `
+                        <a href="sortie.html?id=${relId}" class="release-item-card">
+                            <img src="${cover}" alt="${title}" class="release-item-cover" loading="lazy">
+                            <div class="release-item-info">
+                                <div class="release-item-title" title="${title}">${title}</div>
+                                <div class="release-item-type">${rType}</div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+                albumsSection.classList.remove('hidden');
+            }
+
+            if (singlesEps.length > 0) {
+                singlesGrid.innerHTML = singlesEps.map(r => {
+                    const cover = resolveImageUrl(r.coverUrl || r.cover_url || '');
+                    const title = r.title || 'Single';
+                    const relId = r.id || r._id || '';
+                    const rType = r.type || r.releaseType || 'Single / EP';
+                    return `
+                        <a href="sortie.html?id=${relId}" class="release-item-card">
+                            <img src="${cover}" alt="${title}" class="release-item-cover" loading="lazy">
+                            <div class="release-item-info">
+                                <div class="release-item-title" title="${title}">${title}</div>
+                                <div class="release-item-type">${rType}</div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+                singlesSection.classList.remove('hidden');
             }
         }
 
