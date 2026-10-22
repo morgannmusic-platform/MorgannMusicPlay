@@ -16,14 +16,7 @@
     <meta property="og:site_name" content="Morgann Music CP">
 
     <!-- Schéma.org JSON-LD dynamique -->
-    <script type="application/ld+json" id="schemaOrgData">
-    {
-      "@context": "https://schema.org",
-      "@type": "MusicAlbum",
-      "name": "Sortie",
-      "url": "https://mm-cp.uk/"
-    }
-    </script>
+    <script type="application/ld+json" id="schemaOrgData"></script>
 
     <!-- Color Thief pour extraire les couleurs de la pochette -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
@@ -593,14 +586,16 @@
                 document.getElementById('og-description').setAttribute('content', releaseDescText);
                 document.getElementById('og-image').setAttribute('content', window.location.origin + staticCoverSrc);
 
-                // Injection dynamique du schéma JSON-LD depuis la BDD (schemaJson ou schema_json)
-                const customSchema = release.schemaJson || release.schema_json;
+                // Injection dynamique du schéma JSON-LD depuis la BDD (schema_json ou schemaJson)
+                const schemaTag = document.getElementById('schemaOrgData');
+                const customSchema = release.schema_json || release.schemaJson;
+
                 if (customSchema) {
                     try {
                         const schemaObj = typeof customSchema === 'string' ? JSON.parse(customSchema) : customSchema;
-                        document.getElementById('schemaOrgData').textContent = JSON.stringify(schemaObj, null, 2);
+                        schemaTag.textContent = JSON.stringify(schemaObj, null, 2);
                     } catch (e) {
-                        console.warn("Erreur parsing schemaJson sortie, repli sur le schéma par défaut :", e);
+                        console.warn("Erreur parsing schema_json sortie, repli sur le schéma par défaut :", e);
                         const defaultSchema = {
                             "@context": "https://schema.org",
                             "@type": "MusicAlbum",
@@ -613,7 +608,7 @@
                                 "name": release.artistName || "Artiste"
                             }
                         };
-                        document.getElementById('schemaOrgData').textContent = JSON.stringify(defaultSchema, null, 2);
+                        schemaTag.textContent = JSON.stringify(defaultSchema, null, 2);
                     }
                 } else {
                     const defaultSchema = {
@@ -628,7 +623,7 @@
                             "name": release.artistName || "Artiste"
                         }
                     };
-                    document.getElementById('schemaOrgData').textContent = JSON.stringify(defaultSchema, null, 2);
+                    schemaTag.textContent = JSON.stringify(defaultSchema, null, 2);
                 }
 
                 const tracks = release.tracks || [];
