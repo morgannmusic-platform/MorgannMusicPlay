@@ -4,6 +4,18 @@ export async function onRequest(context) {
     const hostname = url.hostname.toLowerCase();
     const baseUrl = `https://${hostname}`;
 
+    // Fonction pour garantir un format de date valide (YYYY-MM-DD) exigé par Google
+    function formatDate(dateString) {
+        try {
+            if (!dateString) return new Date().toISOString().split("T")[0];
+            const d = new Date(dateString);
+            if (!isNaN(d.getTime())) {
+                return d.toISOString().split("T")[0];
+            }
+        } catch (e) { }
+        return new Date().toISOString().split("T")[0];
+    }
+
     try {
         // 1. Récupération des sorties avec le statut 'direct' ou 'livrée'
         const releasesRes = await env.DB.prepare(
@@ -14,8 +26,7 @@ export async function onRequest(context) {
         ).all();
         const releases = releasesRes.results || [];
 
-        // 2. Récupération des artistes qui ont au moins une sortie 'direct' ou 'livrée'
-        // On fait une jointure ou une recherche sur les artistes liés à ces sorties
+        // 2. Récupération des artistes liés à ces sorties
         const artistsRes = await env.DB.prepare(
             `SELECT DISTINCT a.id, a.created_at 
        FROM artists a
@@ -35,32 +46,26 @@ export async function onRequest(context) {
         xml += `    <priority>1.0</priority>\n`;
         xml += `  </url>\n`;
 
-        // Boucle sur les sorties filtrées (/sortie?id=...)
+        // Boucle sur les sorties filtrées
         for (const row of releases) {
-            let lastmod = row.updated_at || row.created_at || new Date().toISOString();
-            if (lastmod.includes("T")) {
-                lastmod = lastmod.split("T")[0];
-            }
+            const lastmod = formatDate(row.updated_at || row.created_at);
 
             xml += `  <url>\n`;
             xml += `    <loc>${baseUrl}/sortie?id=${row.id}</loc>\n`;
             xml += `    <lastmod>${lastmod}</lastmod>\n`;
-            xml += `    <changefreq>daily</changefreq>\n`;
+            xml += `    <changefreq>weekly</changefreq>\n`;
             xml += `    <priority>0.8</priority>\n`;
             xml += `  </url>\n`;
         }
 
-        // Boucle sur les artistes valides (/artiste?id=...)
+        // Boucle sur les artistes valides
         for (const row of artists) {
-            let lastmod = row.created_at || new Date().toISOString();
-            if (lastmod.includes("T")) {
-                lastmod = lastmod.split("T")[0];
-            }
+            const lastmod = formatDate(row.created_at);
 
             xml += `  <url>\n`;
             xml += `    <loc>${baseUrl}/artiste?id=${row.id}</loc>\n`;
             xml += `    <lastmod>${lastmod}</lastmod>\n`;
-            xml += `    <changefreq>daily</changefreq>\n`;
+            xml += `    <changefreq>weekly</changefreq>\n`;
             xml += `    <priority>0.7</priority>\n`;
             xml += `  </url>\n`;
         }
