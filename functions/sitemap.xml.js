@@ -45,7 +45,7 @@ export async function onRequest(context) {
             xml += `  <url>\n`;
             xml += `    <loc>${baseUrl}/sortie?id=${row.id}</loc>\n`;
             xml += `    <lastmod>${lastmod}</lastmod>\n`;
-            xml += `    <changefreq>weekly</changefreq>\n`;
+            xml += `    <changefreq>daily</changefreq>\n`;
             xml += `    <priority>0.8</priority>\n`;
             xml += `  </url>\n`;
         }
@@ -60,7 +60,7 @@ export async function onRequest(context) {
             xml += `  <url>\n`;
             xml += `    <loc>${baseUrl}/artiste?id=${row.id}</loc>\n`;
             xml += `    <lastmod>${lastmod}</lastmod>\n`;
-            xml += `    <changefreq>weekly</changefreq>\n`;
+            xml += `    <changefreq>daily</changefreq>\n`;
             xml += `    <priority>0.7</priority>\n`;
             xml += `  </url>\n`;
         }
