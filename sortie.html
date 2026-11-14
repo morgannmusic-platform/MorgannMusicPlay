@@ -594,8 +594,12 @@
                 const staticCoverSrc = getMediaUrl(release.coverUrl || release.animatedCoverUrl);
                 const isAnimated = rawCoverUrl && (rawCoverUrl.endsWith('.mp4') || rawCoverUrl.endsWith('.mov'));
 
-                const releaseTitleText = `${release.title} - ${release.artistName || 'Artiste'}`;
-                const releaseDescText = `Découvrez ${release.title} par ${release.artistName || 'Artiste'} sur Morgann Music CP.`;
+                // Gestion de la version de la sortie entre parenthèses
+                const releaseVersion = release.versionLine || release.version_line || release.version || "";
+                const displayTitle = releaseVersion ? `${release.title} (${releaseVersion})` : release.title;
+
+                const releaseTitleText = `${displayTitle} - ${release.artistName || 'Artiste'}`;
+                const releaseDescText = `Découvrez ${displayTitle} par ${release.artistName || 'Artiste'} sur Morgann Music CP.`;
 
                 document.getElementById('page-meta-title').innerText = releaseTitleText;
                 document.getElementById('og-title').setAttribute('content', releaseTitleText);
@@ -615,7 +619,7 @@
                         const defaultSchema = {
                             "@context": "https://schema.org",
                             "@type": "MusicAlbum",
-                            "name": release.title || "Sortie",
+                            "name": displayTitle,
                             "url": window.location.href,
                             "image": window.location.origin + staticCoverSrc,
                             "description": releaseDescText,
@@ -630,7 +634,7 @@
                     const defaultSchema = {
                         "@context": "https://schema.org",
                         "@type": "MusicAlbum",
-                        "name": release.title || "Sortie",
+                        "name": displayTitle,
                         "url": window.location.href,
                         "image": window.location.origin + staticCoverSrc,
                         "description": releaseDescText,
@@ -679,7 +683,7 @@
                         </div>
                         <div class="release-info">
                             <span class="release-type">${release.type || 'Single'}</span>
-                            <h1 id="release-title">${release.title}</h1>
+                            <h1 id="release-title">${displayTitle}</h1>
                             <div class="artist-name" onclick="goToArtist('${artistName.replace(/'/g, "\\'")}')">${artistName}</div>
                             
                             <button class="btn-share btn-share-mobile" onclick="openShareModal()">🔗 Partager / Intégrer</button>
@@ -711,21 +715,26 @@
                     tracksContainer.innerHTML = `<p style="opacity: 0.6; font-style: italic;">Aucune piste audio disponible pour cette sortie.</p>`;
                 } else {
                     tracksContainer.innerHTML = tracks.map((track, index) => {
+                        let trackTitle = typeof track === 'object' ? (track.title || track.name || 'Piste ' + (index + 1)) : track;
+
+                        // Gestion de la version de la piste entre parenthèses
+                        let trackVersion = typeof track === 'object' ? (track.version || track.versionLine || track.version_line || "") : "";
+                        let fullTrackTitle = trackVersion ? `${trackTitle} (${trackVersion})` : trackTitle;
+
                         const trackFileUrl = getMediaUrl(track.fileUrl || track.url);
-                        const trackTitle = track.title || release.title;
 
                         return `
-                            <div class="track-item" onclick="triggerPlay('${trackTitle.replace(/'/g, "\\'")}', '${artistName.replace(/'/g, "\\'")}', '${trackFileUrl}', '${staticCoverSrc}')" oncontextmenu="openContextMenu(event, ${index})">
+                            <div class="track-item" onclick="triggerPlay('${fullTrackTitle.replace(/'/g, "\\'")}', '${artistName.replace(/'/g, "\\'")}', '${trackFileUrl}', '${staticCoverSrc}')" oncontextmenu="openContextMenu(event, ${index})">
                                 <div class="track-left">
                                     <span class="track-number">${index + 1}</span>
-                                    <span class="track-title">${trackTitle}</span>
+                                    <span class="track-title">${fullTrackTitle}</span>
                                 </div>
                                 <div class="track-right">
                                     <div class="track-duration">${track.duration || ''}</div>
                                     <button class="btn-track-menu" onclick="event.stopPropagation(); toggleContextMenu(event, ${index})">⋮</button>
                                 </div>
                                 <div class="context-menu" id="ctx-menu-${index}">
-                                    <div class="context-menu-item" onclick="actionQueue(event, '${trackTitle.replace(/'/g, "\\'")}')">Lire en suite</div>
+                                    <div class="context-menu-item" onclick="actionQueue(event, '${fullTrackTitle.replace(/'/g, "\\'")}')">Lire en suite</div>
                                 </div>
                             </div>
                         `;
@@ -747,21 +756,17 @@
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(el, 0, 0, canvas.width, canvas.height);
 
-                            // Analyse des bords de l'image (contours larges) pour détecter un cadre/fond noir massif
                             const w = canvas.width;
                             const h = canvas.height;
                             const sampleStep = Math.max(1, Math.floor(w / 20));
                             let darkEdgeCount = 0;
                             let totalEdgeCount = 0;
 
-                            // Fonction pour tester si un pixel est proche du noir
                             const isDark = (r, g, b) => r < 35 && g < 35 && b < 35;
 
-                            // Échantillonner les marges (bords de l'image sur 10% de l'épaisseur)
                             const marginX = Math.floor(w * 0.12);
                             const marginY = Math.floor(h * 0.12);
 
-                            // Bord haut et bord bas
                             for (let x = 0; x < w; x += sampleStep) {
                                 for (let y = 0; y < marginY; y += sampleStep) {
                                     const p = ctx.getImageData(x, y, 1, 1).data;
@@ -774,7 +779,6 @@
                                     if (isDark(p[0], p[1], p[2])) darkEdgeCount++;
                                 }
                             }
-                            // Bord gauche et bord droit
                             for (let y = 0; y < h; y += sampleStep) {
                                 for (let x = 0; x < marginX; x += sampleStep) {
                                     const p = ctx.getImageData(x, y, 1, 1).data;
@@ -797,12 +801,10 @@
                                 const [r, g, b] = palette[0];
                                 const accentColor = `rgb(${r}, ${g}, ${b})`;
 
-                                // Si la pochette a de larges contours noirs, le fond de la page devient noir pur
                                 const solidColor = hasWideBlackBorders ? '#000000' : `rgb(${r}, ${g}, ${b})`;
                                 document.documentElement.style.setProperty('--accent-dynamic', accentColor);
                                 document.body.style.backgroundColor = solidColor;
 
-                                // Si le fond est noir (contours larges noirs), texte hero en blanc et Dolby inversé
                                 if (hasWideBlackBorders) {
                                     document.documentElement.style.setProperty('--hero-text', '#ffffff');
                                     document.documentElement.style.setProperty('--hero-text-secondary', 'rgba(255, 255, 255, 0.85)');
@@ -823,7 +825,6 @@
                                     }
                                 }
 
-                                // Navbar / Sidebar blanche avec liens aux couleurs de la page
                                 let dynamicStyleTag = document.getElementById('dynamic-sidebar-style');
                                 if (!dynamicStyleTag) {
                                     dynamicStyleTag = document.createElement('style');

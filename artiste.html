@@ -790,12 +790,18 @@
                 mainGrid.classList.add('hidden');
             }
 
-            // --- FILTRAGE DES SORTIES (Statut direct uniquement) ---
-            const artistReleases = allReleases.filter(r =>
-                ((r.artistName && r.artistName.toLowerCase() === name.toLowerCase()) ||
-                    (r.artist_name && r.artist_name.toLowerCase() === name.toLowerCase())) &&
-                (r.status === 'direct' || r.statut === 'direct')
-            );
+            // --- FILTRAGE DES SORTIES (Statut direct uniquement et tri par release_date) ---
+            const artistReleases = allReleases
+                .filter(r =>
+                    ((r.artistName && r.artistName.toLowerCase() === name.toLowerCase()) ||
+                        (r.artist_name && r.artist_name.toLowerCase() === name.toLowerCase())) &&
+                    (r.status === 'direct' || r.statut === 'direct')
+                )
+                .sort((a, b) => {
+                    const dateA = new Date(a.release_date || a.releaseDate || 0);
+                    const dateB = new Date(b.release_date || b.releaseDate || 0);
+                    return dateB - dateA; // Plus récent en premier
+                });
 
             // Gestion de la dernière sortie
             const latest = artistReleases.length > 0 ? artistReleases[0] : null;
